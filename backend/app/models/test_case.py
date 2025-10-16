@@ -1,10 +1,10 @@
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 from pydantic import Field
 from sqlalchemy import Column, String, Text, Enum, Integer, ForeignKey, DateTime, Boolean
 from sqlalchemy.orm import relationship
-from pydantic import BaseModel
 from autogen_agentchat.messages import BaseMessage
+from app.models.base import BaseModel
 
 import enum
 
@@ -112,6 +112,18 @@ class TestExecution(BaseModel):
     def __repr__(self):
         return f"<TestExecution(test_case_id={self.test_case_id}, status='{self.status}')>"
 
+class TestCaseData(BaseMessage):
+    """测试用例数据模型"""
+    title: str = Field(..., description="用例标题")
+    code: Optional[str] = Field(None, description="用例编号")
+    description: Optional[str] = Field(None, description="用例描述")
+    preconditions: Optional[str] = Field(None, description="前置条件")
+    test_steps: Optional[str] = Field(None, description="测试步骤")
+    expected_result: Optional[str] = Field(None, description="预期结果")
+    test_data: Optional[str] = Field(None, description="测试数据")
+    type: Optional[TestCaseType] = Field(TestCaseType.FUNCTIONAL, description="用例类型")
+    priority: Optional[TestCasePriority] = Field(TestCasePriority.MEDIUM, description="用例优先级")
+
 class VideoAnalysisRequest(BaseMessage):
     video_name: str = Field(..., description="视频名称")
     video_path: str = Field(..., description="视频路径")
@@ -135,10 +147,10 @@ class TestCaseGenerationRequest(BaseMessage):
 
 class ImageAnalysisResponse(BaseMessage):
     """图片分析响应"""
-    session_id: Optional [str] = Field(..., description="会话ID")
+    session_id: Optional[str] = Field(..., description="会话ID")
     image_name: str = Field(..., description="图片名称")
     image_id: str = Field(..., description="图片ID")
     analysis_result: dict = Field(..., description="分析结果")
-    test_cases=List[TestCaseData] = Field(..., description="测试用例数据")
-    processing_time: Optional [float] = Field(..., description="处理时间")
-    created_at: Optional [datetime] = Field(..., description="创建时间")
+    test_cases: List[TestCaseData] = Field(..., description="测试用例数据")
+    processing_time: Optional[float] = Field(..., description="处理时间")
+    created_at: Optional[datetime] = Field(..., description="创建时间")
