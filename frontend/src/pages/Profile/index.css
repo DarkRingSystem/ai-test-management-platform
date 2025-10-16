@@ -1,0 +1,265 @@
+.profile-page {
+  padding: 0;
+}
+
+.profile-page .profile-card {
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.profile-page .profile-card .ant-card-body {
+  padding: 32px 24px;
+}
+
+.profile-page .details-card {
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.profile-page .details-card .ant-card-head {
+  border-bottom: 1px solid #f0f0f0;
+  padding: 0 24px;
+}
+
+.profile-page .details-card .ant-card-head-title {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.profile-page .ant-descriptions-bordered .ant-descriptions-item-label {
+  background-color: #fafafa;
+  font-weight: 500;
+}
+
+.profile-page .ant-descriptions-bordered .ant-descriptions-item-content {
+  background-color: #fff;
+}
+
+.profile-page .ant-avatar {
+  border: 4px solid #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.profile-page .ant-tag {
+  border-radius: 6px;
+  font-weight: 500;
+  padding: 4px 12px;
+}
+
+.profile-page .ant-btn {
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.profile-page .ant-btn-primary {
+  background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
+  border: none;
+  box-shadow: 0 2px 8px rgba(24, 144, 255, 0.3);
+}
+
+.profile-page .ant-btn-primary:hover {
+  background: linear-gradient(135deg, #40a9ff 0%, #1890ff 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(24, 144, 255, 0.4);
+}
+
+.profile-page .ant-divider {
+  margin: 20px 0;
+}
+
+/* 统计卡片样式 */
+.profile-page .stats-card {
+  text-align: center;
+  padding: 20px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #f6f9fc 0%, #ffffff 100%);
+  border: 1px solid #e8f4fd;
+  transition: all 0.3s ease;
+}
+
+.profile-page .stats-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.profile-page .stats-number {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.profile-page .stats-label {
+  font-size: 14px;
+  color: #8c8c8c;
+  font-weight: 500;
+}
+
+/* 信息项样式 */
+.profile-page .info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.profile-page .info-label {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  color: #262626;
+  margin-bottom: 4px;
+}
+
+.profile-page .info-value {
+  color: #595959;
+  font-size: 14px;
+}
+
+/* 模态框样式 */
+.profile-page .ant-modal-header {
+  border-bottom: 1px solid #f0f0f0;
+  padding: 20px 24px 16px;
+}
+
+.profile-page .ant-modal-title {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.profile-page .ant-modal-body {
+  padding: 24px;
+}
+
+.profile-page .ant-form-item-label > label {
+  font-weight: 500;
+  color: #262626;
+}
+
+.profile-page .ant-input,
+.profile-page .ant-input-password {
+  border-radius: 6px;
+  border: 1px solid #d9d9d9;
+  transition: all 0.3s ease;
+}
+
+.profile-page .ant-input:focus,
+.profile-page .ant-input-password:focus {
+  border-color: #1890ff;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+.profile-page .ant-input:hover,
+.profile-page .ant-input-password:hover {
+  border-color: #40a9ff;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .profile-page .profile-card .ant-card-body {
+    padding: 24px 16px;
+  }
+  
+  .profile-page .details-card .ant-card-body {
+    padding: 16px;
+  }
+  
+  .profile-page .ant-descriptions {
+    font-size: 12px;
+  }
+  
+  .profile-page .ant-descriptions-item-label,
+  .profile-page .ant-descriptions-item-content {
+    padding: 8px 12px;
+  }
+  
+  .profile-page .ant-avatar {
+    width: 80px !important;
+    height: 80px !important;
+  }
+  
+  .profile-page .ant-modal {
+    margin: 0;
+    max-width: 100vw;
+  }
+  
+  .profile-page .ant-modal-body {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 576px) {
+  .profile-page .ant-descriptions {
+    column-count: 1;
+  }
+  
+  .profile-page .ant-descriptions-item {
+    padding-bottom: 12px;
+  }
+  
+  .profile-page .stats-number {
+    font-size: 24px;
+  }
+  
+  .profile-page .ant-space {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .profile-page .ant-space .ant-btn {
+    width: 100%;
+  }
+}
+
+/* 动画效果 */
+.profile-page .ant-card {
+  transition: all 0.3s ease;
+}
+
+.profile-page .ant-card:hover {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.profile-page .ant-btn {
+  transition: all 0.3s ease;
+}
+
+.profile-page .ant-tag {
+  transition: all 0.3s ease;
+}
+
+/* 复制按钮样式 */
+.profile-page .ant-typography-copy {
+  color: #1890ff;
+  margin-left: 8px;
+}
+
+.profile-page .ant-typography-copy:hover {
+  color: #40a9ff;
+}
+
+/* 加载状态 */
+.profile-page .ant-spin-container {
+  min-height: 200px;
+}
+
+/* 表单验证样式 */
+.profile-page .ant-form-item-has-error .ant-input,
+.profile-page .ant-form-item-has-error .ant-input-password {
+  border-color: #ff4d4f;
+}
+
+.profile-page .ant-form-item-has-error .ant-input:focus,
+.profile-page .ant-form-item-has-error .ant-input-password:focus {
+  border-color: #ff4d4f;
+  box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.2);
+}
+
+.profile-page .ant-form-item-explain-error {
+  color: #ff4d4f;
+  font-size: 12px;
+  margin-top: 4px;
+}

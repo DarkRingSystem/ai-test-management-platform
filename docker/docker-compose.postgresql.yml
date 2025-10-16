@@ -1,0 +1,111 @@
+version: '3.8'
+
+services:
+  # PostgreSQL 数据库
+  postgres:
+    image: postgres:15-alpine
+    container_name: test_platform_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: test_platform
+      POSTGRES_USER: testplatform
+      POSTGRES_PASSWORD: testplatform123
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=C"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-postgres.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U testplatform -d test_platform"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - test_platform_network
+
+  # Redis 缓存
+  redis:
+    image: redis:7-alpine
+    container_name: test_platform_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - test_platform_network
+
+  # 后端服务
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    container_name: test_platform_backend
+    restart: unless-stopped
+    environment:
+      - DB_TYPE=postgresql
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=testplatform
+      - POSTGRES_PASSWORD=testplatform123
+      - POSTGRES_DB=test_platform
+      - REDIS_URL=redis://redis:6379/0
+      - SECRET_KEY=your-secret-key-change-this-in-production
+      - DEBUG=False
+    ports:
+      - "8000:8000"
+    volumes:
+      - ../backend:/app
+      - backend_uploads:/app/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - test_platform_network
+    command: >
+      sh -c "
+        echo '等待数据库就绪...' &&
+        sleep 5 &&
+        echo '运行数据库迁移...' &&
+        alembic upgrade head &&
+        echo '初始化数据...' &&
+        python init_db.py &&
+        echo '启动应用...' &&
+        uvicorn main:app --host 0.0.0.0 --port 8000
+      "
+
+  # 前端服务
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+    container_name: test_platform_frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - test_platform_network
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  backend_uploads:
+    driver: local
+
+networks:
+  test_platform_network:
+    driver: bridge
+

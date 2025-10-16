@@ -1,0 +1,376 @@
+/* 接口自动化测试页面样式 */
+.api-automation-container {
+  padding: 24px;
+  background: #f5f5f5;
+  min-height: 100vh;
+}
+
+.api-automation-container .ant-card {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.api-automation-container .ant-card-head {
+  border-bottom: 1px solid #f0f0f0;
+  background: #fafafa;
+}
+
+.api-automation-container .ant-card-head-title {
+  padding: 12px 0;
+  font-weight: 600;
+  color: #262626;
+}
+
+/* 标签页样式 */
+.api-automation-container .ant-tabs {
+  margin-top: 16px;
+}
+
+.api-automation-container .ant-tabs-tab {
+  font-weight: 500;
+}
+
+.api-automation-container .ant-tabs-tab-active {
+  color: #1890ff;
+}
+
+.api-automation-container .ant-tabs-ink-bar {
+  background: #1890ff;
+}
+
+/* 表格样式 */
+.api-automation-container .ant-table {
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.api-automation-container .ant-table-thead > tr > th {
+  background: #fafafa;
+  font-weight: 600;
+  color: #262626;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.api-automation-container .ant-table-tbody > tr {
+  transition: all 0.2s ease;
+}
+
+.api-automation-container .ant-table-tbody > tr:hover {
+  background: #f8f9fa;
+}
+
+/* 标签样式 */
+.api-automation-container .ant-tag {
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 2px 8px;
+  margin: 2px 4px 2px 0;
+  border: none;
+}
+
+/* HTTP方法标签颜色 */
+.api-automation-container .ant-tag-blue {
+  background: #e6f7ff;
+  color: #1890ff;
+}
+
+.api-automation-container .ant-tag-green {
+  background: #f6ffed;
+  color: #52c41a;
+}
+
+.api-automation-container .ant-tag-orange {
+  background: #fff7e6;
+  color: #fa8c16;
+}
+
+.api-automation-container .ant-tag-red {
+  background: #fff2f0;
+  color: #ff4d4f;
+}
+
+.api-automation-container .ant-tag-purple {
+  background: #f9f0ff;
+  color: #722ed1;
+}
+
+/* 状态标签颜色 */
+.api-automation-container .ant-tag-success {
+  background: #f6ffed;
+  color: #52c41a;
+}
+
+.api-automation-container .ant-tag-error {
+  background: #fff2f0;
+  color: #ff4d4f;
+}
+
+.api-automation-container .ant-tag-processing {
+  background: #e6f7ff;
+  color: #1890ff;
+}
+
+.api-automation-container .ant-tag-default {
+  background: #fafafa;
+  color: #666;
+}
+
+/* 按钮样式 */
+.api-automation-container .ant-btn {
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.api-automation-container .ant-btn-primary {
+  box-shadow: 0 2px 4px rgba(24, 144, 255, 0.2);
+}
+
+.api-automation-container .ant-btn-primary:hover {
+  box-shadow: 0 4px 8px rgba(24, 144, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+.api-automation-container .ant-btn-text:hover {
+  background: rgba(24, 144, 255, 0.1);
+}
+
+/* 模态框样式 */
+.api-automation-container .ant-modal-header {
+  background: #fafafa;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.api-automation-container .ant-modal-title {
+  color: #1890ff;
+  font-weight: 600;
+}
+
+/* 表单样式 */
+.api-automation-container .ant-form-item-label > label {
+  font-weight: 500;
+  color: #262626;
+}
+
+.api-automation-container .ant-input,
+.api-automation-container .ant-select-selector {
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.api-automation-container .ant-input:focus,
+.api-automation-container .ant-input-focused,
+.api-automation-container .ant-select-focused .ant-select-selector {
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+/* 文本域样式 */
+.api-automation-container .ant-input {
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+}
+
+/* 抽屉样式 */
+.api-automation-container .ant-drawer-header {
+  background: #fafafa;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.api-automation-container .ant-drawer-title {
+  color: #1890ff;
+  font-weight: 600;
+}
+
+.api-automation-container .ant-drawer-body {
+  padding: 24px;
+}
+
+/* 代码块样式 */
+.api-automation-container pre {
+  background: #f5f5f5;
+  border: 1px solid #e8e8e8;
+  border-radius: 6px;
+  padding: 12px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  overflow-x: auto;
+}
+
+/* 树形控件样式 */
+.api-automation-container .ant-tree {
+  background: #fff;
+  border-radius: 6px;
+  padding: 8px;
+}
+
+.api-automation-container .ant-tree-node-content-wrapper {
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.api-automation-container .ant-tree-node-content-wrapper:hover {
+  background: #f0f8ff;
+}
+
+.api-automation-container .ant-tree-node-selected {
+  background: #e6f7ff !important;
+}
+
+/* 分割线样式 */
+.api-automation-container .ant-divider {
+  margin: 16px 0;
+  border-color: #f0f0f0;
+}
+
+/* 标题样式 */
+.api-automation-container .ant-typography-title {
+  color: #262626;
+  margin-bottom: 8px;
+}
+
+/* 上传组件样式 */
+.api-automation-container .ant-upload {
+  border-radius: 6px;
+}
+
+/* 分页样式 */
+.api-automation-container .ant-pagination {
+  margin-top: 16px;
+  text-align: right;
+}
+
+.api-automation-container .ant-pagination-item {
+  border-radius: 4px;
+}
+
+.api-automation-container .ant-pagination-item-active {
+  background: #1890ff;
+  border-color: #1890ff;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .api-automation-container {
+    padding: 12px;
+  }
+  
+  .api-automation-container .ant-drawer {
+    width: 100% !important;
+  }
+  
+  .api-automation-container .ant-modal {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    top: 0 !important;
+  }
+  
+  .api-automation-container .ant-modal-content {
+    border-radius: 0;
+  }
+  
+  .api-automation-container .ant-space {
+    flex-wrap: wrap;
+  }
+  
+  .api-automation-container .ant-card-extra {
+    margin-top: 8px;
+  }
+}
+
+@media (max-width: 576px) {
+  .api-automation-container .ant-table {
+    font-size: 12px;
+  }
+  
+  .api-automation-container .ant-btn {
+    padding: 4px 8px;
+    font-size: 12px;
+  }
+  
+  .api-automation-container .ant-tag {
+    font-size: 10px;
+    padding: 1px 6px;
+  }
+  
+  .api-automation-container pre {
+    font-size: 10px;
+    padding: 8px;
+  }
+}
+
+/* 加载状态样式 */
+.api-automation-container .ant-btn-loading {
+  position: relative;
+}
+
+.api-automation-container .ant-btn-loading::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: inherit;
+}
+
+/* 图标样式 */
+.api-automation-container .anticon {
+  vertical-align: middle;
+}
+
+/* 空状态样式 */
+.api-automation-container .ant-empty {
+  padding: 40px 20px;
+}
+
+.api-automation-container .ant-empty-image svg {
+  opacity: 0.3;
+}
+
+/* 滚动条样式 */
+.api-automation-container .ant-drawer-body::-webkit-scrollbar,
+.api-automation-container .ant-modal-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.api-automation-container .ant-drawer-body::-webkit-scrollbar-track,
+.api-automation-container .ant-modal-body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.api-automation-container .ant-drawer-body::-webkit-scrollbar-thumb,
+.api-automation-container .ant-modal-body::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.api-automation-container .ant-drawer-body::-webkit-scrollbar-thumb:hover,
+.api-automation-container .ant-modal-body::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* 选择器样式 */
+.api-automation-container .ant-select-multiple .ant-select-selection-item {
+  border-radius: 4px;
+  background: #f0f8ff;
+  border-color: #91d5ff;
+}
+
+/* 表单必填项样式 */
+.api-automation-container .ant-form-item-required::before {
+  color: #ff4d4f;
+}
+
+/* 代码文本样式 */
+.api-automation-container .ant-typography code {
+  background: #f5f5f5;
+  border: 1px solid #e8e8e8;
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 12px;
+}

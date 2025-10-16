@@ -1,0 +1,76 @@
+version: '3.8'
+
+services:
+  # PostgreSQL数据库
+  postgres:
+    image: postgres:15
+    container_name: test_platform_db
+    environment:
+      POSTGRES_DB: test_platform
+      POSTGRES_USER: testuser
+      POSTGRES_PASSWORD: testpass123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - test_platform_network
+
+  # Redis缓存
+  redis:
+    image: redis:7-alpine
+    container_name: test_platform_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - test_platform_network
+
+  # 后端API服务
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    container_name: test_platform_backend
+    environment:
+      DATABASE_URL: postgresql://testuser:testpass123@postgres:5432/test_platform
+      ASYNC_DATABASE_URL: postgresql+asyncpg://testuser:testpass123@postgres:5432/test_platform
+      REDIS_URL: redis://redis:6379/0
+      SECRET_KEY: your-secret-key-change-in-production
+      DEBUG: "False"
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - ../backend:/app
+      - backend_uploads:/app/uploads
+    networks:
+      - test_platform_network
+
+  # 前端服务
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+    container_name: test_platform_frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    volumes:
+      - ../frontend:/app
+      - /app/node_modules
+    networks:
+      - test_platform_network
+
+volumes:
+  postgres_data:
+  redis_data:
+  backend_uploads:
+
+networks:
+  test_platform_network:
+    driver: bridge

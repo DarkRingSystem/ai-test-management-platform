@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D缺陷严重程度柱状图预览</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            text-align: center;
+            max-width: 800px;
+        }
+        
+        .title {
+            font-size: 28px;
+            font-weight: bold;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 30px;
+        }
+        
+        .chart-container {
+            perspective: 1000px;
+            margin: 40px 0;
+            padding: 30px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 16px;
+            box-shadow: inset 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .bars-container {
+            transform-style: preserve-3d;
+            transform: rotateX(-15deg) rotateY(0deg);
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 30px;
+            height: 300px;
+            transition: transform 0.3s ease;
+            cursor: grab;
+        }
+        
+        .bars-container:active {
+            cursor: grabbing;
+        }
+        
+        .bar-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transform-style: preserve-3d;
+        }
+        
+        .bar {
+            width: 60px;
+            border-radius: 8px 8px 4px 4px;
+            position: relative;
+            transform-style: preserve-3d;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: barGrow 1s ease-out both;
+        }
+        
+        .bar:hover {
+            transform: scale(1.05) translateZ(10px);
+            filter: brightness(1.2);
+        }
+        
+        .bar-severe {
+            height: 120px;
+            background: linear-gradient(45deg, #ff4d4f, #ff4d4fdd);
+            box-shadow: 0 0 20px #ff4d4f40, inset 0 0 20px rgba(255,255,255,0.2), 0 10px 30px rgba(0,0,0,0.3);
+            animation-delay: 0s;
+        }
+        
+        .bar-major {
+            height: 200px;
+            background: linear-gradient(45deg, #faad14, #faad14dd);
+            box-shadow: 0 0 20px #faad1440, inset 0 0 20px rgba(255,255,255,0.2), 0 10px 30px rgba(0,0,0,0.3);
+            animation-delay: 0.1s;
+        }
+        
+        .bar-minor {
+            height: 250px;
+            background: linear-gradient(45deg, #1890ff, #1890ffdd);
+            box-shadow: 0 0 20px #1890ff40, inset 0 0 20px rgba(255,255,255,0.2), 0 10px 30px rgba(0,0,0,0.3);
+            animation-delay: 0.2s;
+        }
+        
+        .bar-trivial {
+            height: 100px;
+            background: linear-gradient(45deg, #52c41a, #52c41add);
+            box-shadow: 0 0 20px #52c41a40, inset 0 0 20px rgba(255,255,255,0.2), 0 10px 30px rgba(0,0,0,0.3);
+            animation-delay: 0.3s;
+        }
+        
+        .bar-top {
+            position: absolute;
+            top: -4px;
+            left: 0;
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            transform: rotateX(90deg) translateZ(30px);
+        }
+        
+        .bar-side {
+            position: absolute;
+            top: 0;
+            right: -4px;
+            width: 8px;
+            height: 100%;
+            border-radius: 0 4px 4px 0;
+            transform: rotateY(90deg) translateZ(30px);
+        }
+        
+        .bar-value {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            z-index: 10;
+        }
+        
+        .bar-label {
+            margin-top: 20px;
+            text-align: center;
+            transform: translateZ(20px);
+        }
+        
+        .bar-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+        
+        .bar-name {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        
+        .bar-desc {
+            font-size: 12px;
+            color: #666;
+            max-width: 80px;
+        }
+        
+        .controls {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 12px;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+        }
+        
+        .controls h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .feature-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        @keyframes barGrow {
+            from {
+                height: 0;
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes rotate {
+            from { transform: rotateX(-15deg) rotateY(0deg); }
+            to { transform: rotateX(-15deg) rotateY(360deg); }
+        }
+        
+        .auto-rotate {
+            animation: rotate 10s linear infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">🎯 3D缺陷严重程度柱状图</h1>
+        
+        <div class="chart-container">
+            <div class="bars-container" id="barsContainer">
+                <!-- 严重缺陷 -->
+                <div class="bar-item">
+                    <div class="bar bar-severe">
+                        <div class="bar-top" style="background: linear-gradient(135deg, #ff4d4f, #ff4d4fcc);"></div>
+                        <div class="bar-side" style="background: linear-gradient(to right, #ff4d4faa, #ff4d4f66);"></div>
+                        <div class="bar-value">12</div>
+                    </div>
+                    <div class="bar-label">
+                        <div class="bar-icon">🔥</div>
+                        <div class="bar-name" style="color: #ff4d4f;">严重</div>
+                        <div class="bar-desc">系统崩溃</div>
+                    </div>
+                </div>
+                
+                <!-- 主要缺陷 -->
+                <div class="bar-item">
+                    <div class="bar bar-major">
+                        <div class="bar-top" style="background: linear-gradient(135deg, #faad14, #faad14cc);"></div>
+                        <div class="bar-side" style="background: linear-gradient(to right, #faad14aa, #faad1466);"></div>
+                        <div class="bar-value">28</div>
+                    </div>
+                    <div class="bar-label">
+                        <div class="bar-icon">⚠️</div>
+                        <div class="bar-name" style="color: #faad14;">主要</div>
+                        <div class="bar-desc">功能异常</div>
+                    </div>
+                </div>
+                
+                <!-- 次要缺陷 -->
+                <div class="bar-item">
+                    <div class="bar bar-minor">
+                        <div class="bar-top" style="background: linear-gradient(135deg, #1890ff, #1890ffcc);"></div>
+                        <div class="bar-side" style="background: linear-gradient(to right, #1890ffaa, #1890ff66);"></div>
+                        <div class="bar-value">35</div>
+                    </div>
+                    <div class="bar-label">
+                        <div class="bar-icon">🔍</div>
+                        <div class="bar-name" style="color: #1890ff;">次要</div>
+                        <div class="bar-desc">功能可用</div>
+                    </div>
+                </div>
+                
+                <!-- 轻微缺陷 -->
+                <div class="bar-item">
+                    <div class="bar bar-trivial">
+                        <div class="bar-top" style="background: linear-gradient(135deg, #52c41a, #52c41acc);"></div>
+                        <div class="bar-side" style="background: linear-gradient(to right, #52c41aaa, #52c41a66);"></div>
+                        <div class="bar-value">14</div>
+                    </div>
+                    <div class="bar-label">
+                        <div class="bar-icon">💡</div>
+                        <div class="bar-name" style="color: #52c41a;">轻微</div>
+                        <div class="bar-desc">界面优化</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <h3>🎮 交互功能</h3>
+            <p><strong>🖱️ 拖拽旋转</strong>：点击并拖拽图表进行3D旋转观察</p>
+            <p><strong>🎯 悬停效果</strong>：鼠标悬停在柱子上查看详细信息</p>
+            <p><strong>🎨 立体展示</strong>：不同严重程度用不同颜色和图标表示</p>
+            
+            <div style="margin-top: 20px;">
+                <button onclick="toggleAutoRotate()" style="
+                    background: linear-gradient(45deg, #667eea, #764ba2);
+                    color: white;
+                    border: none;
+                    padding: 10px 20px;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    font-weight: bold;
+                    margin-right: 10px;
+                ">🔄 自动旋转</button>
+                
+                <button onclick="resetView()" style="
+                    background: linear-gradient(45deg, #52c41a, #73d13d);
+                    color: white;
+                    border: none;
+                    padding: 10px 20px;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    font-weight: bold;
+                ">🎯 重置视角</button>
+            </div>
+        </div>
+        
+        <div class="feature-list">
+            <div class="feature-item">
+                <h4>🔥 严重缺陷</h4>
+                <p>系统崩溃、数据丢失等严重问题，需要立即修复</p>
+            </div>
+            <div class="feature-item">
+                <h4>⚠️ 主要缺陷</h4>
+                <p>功能无法正常使用，影响用户体验</p>
+            </div>
+            <div class="feature-item">
+                <h4>🔍 次要缺陷</h4>
+                <p>功能可用但存在问题，需要优化</p>
+            </div>
+            <div class="feature-item">
+                <h4>💡 轻微缺陷</h4>
+                <p>界面优化、文案错误等轻微问题</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let isDragging = false;
+        let lastMousePos = { x: 0, y: 0 };
+        let rotation = { x: -15, y: 0 };
+        let autoRotating = false;
+        
+        const barsContainer = document.getElementById('barsContainer');
+        
+        barsContainer.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            lastMousePos = { x: e.clientX, y: e.clientY };
+            barsContainer.style.cursor = 'grabbing';
+        });
+        
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            
+            const deltaX = e.clientX - lastMousePos.x;
+            const deltaY = e.clientY - lastMousePos.y;
+            
+            rotation.x = Math.max(-60, Math.min(60, rotation.x - deltaY * 0.5));
+            rotation.y += deltaX * 0.5;
+            
+            barsContainer.style.transform = `rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`;
+            
+            lastMousePos = { x: e.clientX, y: e.clientY };
+        });
+        
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+            barsContainer.style.cursor = 'grab';
+        });
+        
+        function toggleAutoRotate() {
+            autoRotating = !autoRotating;
+            if (autoRotating) {
+                barsContainer.classList.add('auto-rotate');
+            } else {
+                barsContainer.classList.remove('auto-rotate');
+            }
+        }
+        
+        function resetView() {
+            rotation = { x: -15, y: 0 };
+            barsContainer.style.transform = `rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`;
+            barsContainer.classList.remove('auto-rotate');
+            autoRotating = false;
+        }
+    </script>
+</body>
+</html>

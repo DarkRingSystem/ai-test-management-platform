@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌟 缺陷趋势分析 - 最终优化版</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            background: rgba(26, 26, 46, 0.8);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .title {
+            font-size: 32px;
+            font-weight: bold;
+            background: linear-gradient(45deg, #667eea, #764ba2, #f093fb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            animation: titleGlow 2s ease-in-out infinite;
+        }
+        
+        .subtitle {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.8);
+            text-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+        }
+        
+        /* 图表容器 */
+        .chart-container {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: visible;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            height: 300px;
+        }
+        
+        .time-range {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2));
+            border-radius: 24px;
+            color: #fff;
+            font-weight: bold;
+            display: inline-block;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
+            border: 1px solid rgba(102, 126, 234, 0.5);
+        }
+        
+        /* 网格背景 */
+        .grid-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                repeating-linear-gradient(0deg, rgba(102, 126, 234, 0.1) 0px, transparent 1px, transparent 40px, rgba(102, 126, 234, 0.1) 41px),
+                repeating-linear-gradient(90deg, rgba(102, 126, 234, 0.1) 0px, transparent 1px, transparent 60px, rgba(102, 126, 234, 0.1) 61px);
+            border-radius: 16px;
+            z-index: 1;
+        }
+        
+        /* 顶部光晕 */
+        .top-glow {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 120px;
+            background: radial-gradient(ellipse at center, rgba(102, 126, 234, 0.4) 0%, transparent 70%);
+            filter: blur(30px);
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        .chart-bars {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 20px;
+            height: 100%;
+            padding: 40px 20px 50px 20px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .chart-bar {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            flex: 0 0 auto;
+        }
+        
+        .chart-bar:hover {
+            transform: scale(1.15) translateY(-8px);
+        }
+        
+        .bar-stack {
+            width: 40px;
+            border-radius: 8px 8px 4px 4px;
+            position: relative;
+            animation: barGrow 0.8s ease-out both, barPulse 2s ease-in-out infinite;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .chart-bar:hover .bar-stack {
+            box-shadow: 
+                0 0 20px rgba(102, 126, 234, 0.8),
+                0 0 40px rgba(102, 126, 234, 0.6),
+                0 8px 32px rgba(0, 0, 0, 0.4),
+                inset 0 2px 8px rgba(255, 255, 255, 0.4) !important;
+            filter: brightness(1.2);
+        }
+        
+        .bar-label {
+            margin-top: 12px;
+            font-size: 13px;
+            font-weight: bold;
+            color: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+        }
+        
+        .chart-bar:hover .bar-label {
+            color: #667eea;
+            text-shadow: 0 0 10px rgba(102, 126, 234, 0.8);
+            transform: scale(1.1);
+        }
+        
+        /* 底部发光 */
+        .bar-glow {
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 8px;
+            background: radial-gradient(ellipse at center, rgba(102, 126, 234, 0.6) 0%, transparent 70%);
+            filter: blur(8px);
+            opacity: 0.5;
+            transition: opacity 0.3s ease;
+        }
+        
+        .chart-bar:hover .bar-glow {
+            opacity: 1;
+        }
+        
+        /* 图例 */
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            border-radius: 24px;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            animation: legendFloat 3s ease-in-out infinite;
+        }
+        
+        .legend-item:hover {
+            transform: translateY(-4px) scale(1.05);
+        }
+        
+        /* 动画 */
+        @keyframes titleGlow {
+            0%, 100% {
+                filter: drop-shadow(0 0 10px rgba(102, 126, 234, 0.5));
+            }
+            50% {
+                filter: drop-shadow(0 0 20px rgba(102, 126, 234, 0.8));
+            }
+        }
+        
+        @keyframes barGrow {
+            from {
+                height: 0;
+                opacity: 0;
+                filter: blur(10px);
+            }
+            to {
+                opacity: 1;
+                filter: blur(0);
+            }
+        }
+        
+        @keyframes barPulse {
+            0%, 100% {
+                box-shadow: 
+                    0 0 10px rgba(102, 126, 234, 0.5),
+                    0 4px 16px rgba(0, 0, 0, 0.3),
+                    inset 0 2px 4px rgba(255, 255, 255, 0.3);
+            }
+            50% {
+                box-shadow: 
+                    0 0 15px rgba(102, 126, 234, 0.7),
+                    0 4px 20px rgba(0, 0, 0, 0.4),
+                    inset 0 2px 6px rgba(255, 255, 255, 0.4);
+            }
+        }
+        
+        @keyframes legendFloat {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-3px);
+            }
+        }
+        
+        /* 优化说明 */
+        .optimization-info {
+            margin-top: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 12px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .optimization-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 15px;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+        }
+        
+        .optimization-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .optimization-item {
+            padding: 12px;
+            background: rgba(26, 26, 46, 0.5);
+            border-radius: 8px;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+        }
+        
+        .optimization-item strong {
+            color: #667eea;
+            text-shadow: 0 0 8px rgba(102, 126, 234, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">🌟 缺陷趋势分析 - 最终优化版</h1>
+            <p class="subtitle">✅ 上边距40px | 📏 可用高度170px | 📊 均匀分布</p>
+        </div>
+        
+        <div class="chart-container">
+            <div class="grid-bg"></div>
+            <div class="top-glow"></div>
+            
+            <div style="text-align: center; position: relative; z-index: 2;">
+                <span class="time-range">📅 09-23 至 09-30 (最近8天)</span>
+            </div>
+            
+            <div class="chart-bars" id="chartBars">
+                <!-- 柱状图将通过JavaScript生成 -->
+            </div>
+            
+            <div class="legend">
+                <div class="legend-item" style="background: linear-gradient(135deg, rgba(255, 77, 79, 0.2), rgba(255, 77, 79, 0.1)); border: 1px solid rgba(255, 77, 79, 0.6); box-shadow: 0 0 10px rgba(255, 77, 79, 0.4);">
+                    <span style="font-size: 18px; filter: drop-shadow(0 0 4px #ff4d4f);">🔥</span>
+                    <span style="color: #ff4d4f; text-shadow: 0 0 8px rgba(255, 77, 79, 0.8);">严重</span>
+                </div>
+                <div class="legend-item" style="background: linear-gradient(135deg, rgba(250, 173, 20, 0.2), rgba(250, 173, 20, 0.1)); border: 1px solid rgba(250, 173, 20, 0.6); box-shadow: 0 0 10px rgba(250, 173, 20, 0.4); animation-delay: 0.2s;">
+                    <span style="font-size: 18px; filter: drop-shadow(0 0 4px #faad14);">⚠️</span>
+                    <span style="color: #faad14; text-shadow: 0 0 8px rgba(250, 173, 20, 0.8);">主要</span>
+                </div>
+                <div class="legend-item" style="background: linear-gradient(135deg, rgba(24, 144, 255, 0.2), rgba(24, 144, 255, 0.1)); border: 1px solid rgba(24, 144, 255, 0.6); box-shadow: 0 0 10px rgba(24, 144, 255, 0.4); animation-delay: 0.4s;">
+                    <span style="font-size: 18px; filter: drop-shadow(0 0 4px #1890ff);">🔍</span>
+                    <span style="color: #1890ff; text-shadow: 0 0 8px rgba(24, 144, 255, 0.8);">次要</span>
+                </div>
+                <div class="legend-item" style="background: linear-gradient(135deg, rgba(82, 196, 26, 0.2), rgba(82, 196, 26, 0.1)); border: 1px solid rgba(82, 196, 26, 0.6); box-shadow: 0 0 10px rgba(82, 196, 26, 0.4); animation-delay: 0.6s;">
+                    <span style="font-size: 18px; filter: drop-shadow(0 0 4px #52c41a);">💡</span>
+                    <span style="color: #52c41a; text-shadow: 0 0 8px rgba(82, 196, 26, 0.8);">轻微</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="optimization-info">
+            <div class="optimization-title">✅ 最终优化参数</div>
+            <div class="optimization-grid">
+                <div class="optimization-item">
+                    <strong>上边距:</strong> 40px<br>
+                    <small>柱子整体下移，顶部留白充足</small>
+                </div>
+                <div class="optimization-item">
+                    <strong>下边距:</strong> 50px<br>
+                    <small>为日期标签预留足够空间</small>
+                </div>
+                <div class="optimization-item">
+                    <strong>可用高度:</strong> 170px<br>
+                    <small>固定高度，确保均匀分布</small>
+                </div>
+                <div class="optimization-item">
+                    <strong>柱子间距:</strong> 20px<br>
+                    <small>居中对齐，间距均匀</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const data = [
+            { date: '09-23', severe: 2, major: 5, minor: 8, trivial: 3, total: 18 },
+            { date: '09-24', severe: 1, major: 7, minor: 12, trivial: 5, total: 25 },
+            { date: '09-25', severe: 3, major: 6, minor: 9, trivial: 4, total: 22 },
+            { date: '09-26', severe: 2, major: 8, minor: 11, trivial: 6, total: 27 },
+            { date: '09-27', severe: 4, major: 9, minor: 13, trivial: 7, total: 33 },
+            { date: '09-28', severe: 1, major: 6, minor: 10, trivial: 4, total: 21 },
+            { date: '09-29', severe: 2, major: 7, minor: 8, trivial: 5, total: 22 },
+            { date: '09-30', severe: 3, major: 8, minor: 12, trivial: 6, total: 29 }
+        ];
+        
+        const colors = {
+            severe: '#ff4d4f',
+            major: '#faad14',
+            minor: '#1890ff',
+            trivial: '#52c41a'
+        };
+        
+        const chartBars = document.getElementById('chartBars');
+        const maxTotal = Math.max(...data.map(d => d.total));
+        const availableHeight = 170; // 固定可用高度170px
+        
+        data.forEach((item, index) => {
+            const bar = document.createElement('div');
+            bar.className = 'chart-bar';
+            
+            const barHeight = (item.total / maxTotal) * availableHeight;
+            const severePct = (item.severe / item.total) * 100;
+            const majorPct = (item.major / item.total) * 100;
+            const minorPct = (item.minor / item.total) * 100;
+            const trivialPct = (item.trivial / item.total) * 100;
+            
+            bar.innerHTML = `
+                <div class="bar-stack" style="
+                    height: ${barHeight}px;
+                    background: linear-gradient(to top, 
+                        ${colors.trivial} 0%, 
+                        ${colors.trivial} ${trivialPct}%, 
+                        ${colors.minor} ${trivialPct}%, 
+                        ${colors.minor} ${trivialPct + minorPct}%, 
+                        ${colors.major} ${trivialPct + minorPct}%, 
+                        ${colors.major} ${trivialPct + minorPct + majorPct}%, 
+                        ${colors.severe} ${trivialPct + minorPct + majorPct}%, 
+                        ${colors.severe} 100%);
+                    box-shadow: 
+                        0 0 10px rgba(102, 126, 234, 0.5),
+                        0 4px 16px rgba(0, 0, 0, 0.3),
+                        inset 0 2px 4px rgba(255, 255, 255, 0.3);
+                    animation-delay: ${index * 0.1}s, ${index * 0.2}s;
+                ">
+                    <div class="bar-glow"></div>
+                </div>
+                <div class="bar-label">${item.date}</div>
+            `;
+            
+            chartBars.appendChild(bar);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,353 @@
+/* UI自动化用例执行页面样式 */
+.ui-case-execute-container {
+  padding: 24px;
+  background: #f5f5f5;
+  min-height: 100vh;
+}
+
+/* 统计卡片样式 */
+.ui-case-execute-container .ant-card {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.ui-case-execute-container .ant-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.ui-case-execute-container .ant-card-head {
+  border-bottom: 1px solid #f0f0f0;
+  background: #fafafa;
+}
+
+/* 统计数字样式 */
+.ui-case-execute-container .ant-statistic-title {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.ui-case-execute-container .ant-statistic-content {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+/* 按钮样式 */
+.ui-case-execute-container .ant-btn {
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.ui-case-execute-container .ant-btn-primary {
+  box-shadow: 0 2px 4px rgba(24, 144, 255, 0.2);
+}
+
+.ui-case-execute-container .ant-btn-primary:hover {
+  box-shadow: 0 4px 8px rgba(24, 144, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+.ui-case-execute-container .ant-btn:disabled {
+  opacity: 0.6;
+}
+
+/* 表格样式 */
+.ui-case-execute-container .ant-table {
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.ui-case-execute-container .ant-table-thead > tr > th {
+  background: #fafafa;
+  font-weight: 600;
+  color: #262626;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.ui-case-execute-container .ant-table-tbody > tr {
+  transition: all 0.2s ease;
+}
+
+.ui-case-execute-container .ant-table-tbody > tr:hover {
+  background: #f8f9fa;
+}
+
+.ui-case-execute-container .ant-table-tbody > tr.ant-table-row-selected {
+  background: #e6f7ff;
+}
+
+.ui-case-execute-container .ant-table-tbody > tr.ant-table-row-selected:hover {
+  background: #bae7ff;
+}
+
+/* 标签样式 */
+.ui-case-execute-container .ant-tag {
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 2px 8px;
+  margin: 2px 4px 2px 0;
+  border: none;
+}
+
+.ui-case-execute-container .ant-tag-success {
+  background: #f6ffed;
+  color: #52c41a;
+}
+
+.ui-case-execute-container .ant-tag-error {
+  background: #fff2f0;
+  color: #ff4d4f;
+}
+
+.ui-case-execute-container .ant-tag-processing {
+  background: #e6f7ff;
+  color: #1890ff;
+}
+
+.ui-case-execute-container .ant-tag-warning {
+  background: #fffbe6;
+  color: #faad14;
+}
+
+.ui-case-execute-container .ant-tag-default {
+  background: #fafafa;
+  color: #666;
+}
+
+/* 优先级标签颜色 */
+.ui-case-execute-container .ant-tag-red {
+  background: #fff2f0;
+  color: #a8071a;
+}
+
+.ui-case-execute-container .ant-tag-orange {
+  background: #fff7e6;
+  color: #d46b08;
+}
+
+.ui-case-execute-container .ant-tag-green {
+  background: #f6ffed;
+  color: #389e0d;
+}
+
+/* 警告框样式 */
+.ui-case-execute-container .ant-alert {
+  border-radius: 6px;
+  border: none;
+}
+
+.ui-case-execute-container .ant-alert-info {
+  background: #e6f7ff;
+  border-left: 4px solid #1890ff;
+}
+
+.ui-case-execute-container .ant-alert-error {
+  background: #fff2f0;
+  border-left: 4px solid #ff4d4f;
+}
+
+/* 抽屉样式 */
+.ui-case-execute-container .ant-drawer-header {
+  background: #fafafa;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.ui-case-execute-container .ant-drawer-title {
+  color: #1890ff;
+  font-weight: 600;
+}
+
+.ui-case-execute-container .ant-drawer-body {
+  padding: 24px;
+}
+
+/* 时间轴样式 */
+.ui-case-execute-container .ant-timeline {
+  margin-top: 16px;
+}
+
+.ui-case-execute-container .ant-timeline-item-head {
+  border-radius: 50%;
+}
+
+.ui-case-execute-container .ant-timeline-item-content {
+  margin-left: 8px;
+  padding-left: 16px;
+}
+
+/* 搜索框样式 */
+.ui-case-execute-container .ant-input-search {
+  border-radius: 6px;
+}
+
+.ui-case-execute-container .ant-input-search .ant-input {
+  border-radius: 6px 0 0 6px;
+}
+
+.ui-case-execute-container .ant-input-search .ant-btn {
+  border-radius: 0 6px 6px 0;
+}
+
+/* 选择器样式 */
+.ui-case-execute-container .ant-select {
+  border-radius: 6px;
+}
+
+.ui-case-execute-container .ant-select-selector {
+  border-radius: 6px !important;
+}
+
+/* 分页样式 */
+.ui-case-execute-container .ant-pagination {
+  margin-top: 16px;
+  text-align: right;
+}
+
+.ui-case-execute-container .ant-pagination-item {
+  border-radius: 4px;
+}
+
+.ui-case-execute-container .ant-pagination-item-active {
+  background: #1890ff;
+  border-color: #1890ff;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .ui-case-execute-container {
+    padding: 12px;
+  }
+  
+  .ui-case-execute-container .ant-statistic-content {
+    font-size: 20px;
+  }
+  
+  .ui-case-execute-container .ant-drawer {
+    width: 100% !important;
+  }
+  
+  .ui-case-execute-container .ant-space {
+    flex-wrap: wrap;
+  }
+  
+  .ui-case-execute-container .ant-card-extra {
+    margin-top: 8px;
+  }
+}
+
+@media (max-width: 576px) {
+  .ui-case-execute-container .ant-table {
+    font-size: 12px;
+  }
+  
+  .ui-case-execute-container .ant-btn {
+    padding: 4px 8px;
+    font-size: 12px;
+  }
+  
+  .ui-case-execute-container .ant-tag {
+    font-size: 10px;
+    padding: 1px 6px;
+  }
+}
+
+/* 加载状态样式 */
+.ui-case-execute-container .ant-btn-loading {
+  position: relative;
+}
+
+.ui-case-execute-container .ant-btn-loading::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: inherit;
+}
+
+/* 图标样式 */
+.ui-case-execute-container .anticon {
+  vertical-align: middle;
+}
+
+/* 文本样式 */
+.ui-case-execute-container .ant-typography {
+  margin-bottom: 0;
+}
+
+.ui-case-execute-container .ant-typography-title {
+  color: #262626;
+  margin-bottom: 12px;
+}
+
+/* 空状态样式 */
+.ui-case-execute-container .ant-empty {
+  padding: 40px 20px;
+}
+
+.ui-case-execute-container .ant-empty-image svg {
+  opacity: 0.3;
+}
+
+/* 滚动条样式 */
+.ui-case-execute-container .ant-drawer-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.ui-case-execute-container .ant-drawer-body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.ui-case-execute-container .ant-drawer-body::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.ui-case-execute-container .ant-drawer-body::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* 动画效果 */
+@keyframes executeProgress {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.ui-case-execute-container .ant-alert-info::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #1890ff, transparent);
+  animation: executeProgress 2s infinite;
+}
+
+/* 卡片标题样式 */
+.ui-case-execute-container .ant-card-head-title {
+  padding: 12px 0;
+  font-weight: 600;
+  color: #262626;
+}
+
+/* 统计卡片特殊样式 */
+.ui-case-execute-container .ant-row .ant-col .ant-card {
+  height: 100%;
+  text-align: center;
+}
+
+.ui-case-execute-container .ant-row .ant-col .ant-card .ant-card-body {
+  padding: 16px;
+}

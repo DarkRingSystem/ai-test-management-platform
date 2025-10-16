@@ -1,0 +1,378 @@
+/* AI测试用例生成页面样式 */
+.ai-chat-container {
+  height: 100%;
+  padding: 24px;
+  background: #f5f5f5;
+}
+
+.chat-card {
+  height: 100%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.chat-card .ant-card-head {
+  border-bottom: 1px solid #f0f0f0;
+  background: #fafafa;
+}
+
+.chat-card .ant-card-body {
+  padding: 0 !important;
+  height: calc(100vh - 200px) !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.messages-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  background: #ffffff;
+}
+
+.empty-state {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.quick-prompts {
+  margin-top: 24px;
+  max-width: 600px;
+}
+
+.messages-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.message-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.message-item.user {
+  flex-direction: row-reverse;
+}
+
+.message-item.user .message-content {
+  background: #f0f0f0 !important;
+  color: #2c3e50 !important;
+  border-radius: 12px 12px 4px 12px;
+}
+
+.message-item.assistant .message-content {
+  background: #f8f9fa !important;
+  color: #1890ff !important;
+  border-radius: 12px 12px 12px 4px;
+}
+
+.message-avatar {
+  flex-shrink: 0;
+}
+
+.message-content {
+  flex: 1;
+  max-width: 70%;
+  padding: 12px 16px;
+  border-radius: 12px;
+  position: relative;
+  /* 确保内容可以完全显示，不限制高度 */
+  min-height: auto;
+  height: auto;
+  overflow: visible;
+  /* 确保折叠后宽度不变 */
+  min-width: 200px;
+}
+
+.message-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.message-files {
+  margin-bottom: 8px;
+}
+
+.message-text {
+  line-height: 1.6;
+  /* 确保文本内容可以完全显示 */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+  /* 不限制高度，让内容自然展开 */
+  max-height: none;
+  height: auto;
+}
+
+/* 折叠状态样式 */
+.message-text.collapsed {
+  padding: 8px 0;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 6px;
+  border: 1px dashed #d9d9d9;
+  /* 确保折叠后保持一定的宽度 */
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.input-area {
+  border-top: 1px solid #f0f0f0;
+  background: #ffffff;
+}
+
+/* 滚动条样式 */
+.messages-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.messages-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.messages-container::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.messages-container::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .ai-chat-container {
+    padding: 12px;
+  }
+  
+  .message-content {
+    max-width: 85%;
+  }
+  
+  .quick-prompts {
+    max-width: 100%;
+  }
+}
+
+/* 文件上传区域样式 */
+.ant-upload-drag {
+  border: 2px dashed #d9d9d9 !important;
+  border-radius: 8px !important;
+  background: #fafafa !important;
+  padding: 20px !important;
+  transition: all 0.3s ease !important;
+}
+
+.ant-upload-drag:hover {
+  border-color: #1890ff !important;
+  background: #f0f8ff !important;
+}
+
+.ant-upload-drag.ant-upload-drag-hover {
+  border-color: #1890ff !important;
+  background: #e6f7ff !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(24, 144, 255, 0.15);
+}
+
+.ant-upload-drag .ant-upload-drag-icon {
+  margin-bottom: 8px;
+}
+
+.ant-upload-drag .ant-upload-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1890ff;
+  margin-bottom: 4px;
+}
+
+.ant-upload-drag .ant-upload-hint {
+  font-size: 12px;
+  color: #999;
+  margin: 0;
+}
+
+/* 文件标签样式 */
+.ant-tag {
+  margin: 2px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+/* 输入框样式优化 */
+.ant-input {
+  border-radius: 6px !important;
+}
+
+.ant-btn {
+  border-radius: 6px !important;
+}
+
+/* 加载状态样式 */
+.message-item .ant-spin {
+  margin-right: 8px;
+}
+
+/* 流式输出指示器 */
+.message-text.streaming::after {
+  content: '▋';
+  color: #1890ff;
+  animation: blink 1s infinite;
+  margin-left: 2px;
+}
+
+@keyframes blink {
+  0%, 50% {
+    opacity: 1;
+  }
+  51%, 100% {
+    opacity: 0;
+  }
+}
+
+/* 快捷提示按钮样式 */
+.quick-prompts .ant-btn {
+  margin: 4px;
+  height: auto;
+  padding: 8px 12px;
+  white-space: normal;
+  text-align: left;
+  line-height: 1.4;
+}
+
+.quick-prompts .ant-btn:hover {
+  border-color: #1890ff;
+  color: #1890ff;
+}
+
+/* 消息操作按钮样式 */
+.message-header .ant-btn {
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.message-item:hover .message-header .ant-btn {
+  opacity: 0.6;
+}
+
+.message-header .ant-btn:hover {
+  opacity: 1 !important;
+}
+
+/* 折叠按钮特殊样式 */
+.message-header .ant-btn[title="折叠"],
+.message-header .ant-btn[title="展开"] {
+  opacity: 0.4;
+  color: #1890ff;
+}
+
+.message-header .ant-btn[title="折叠"]:hover,
+.message-header .ant-btn[title="展开"]:hover {
+  opacity: 1 !important;
+  color: #1890ff !important;
+  background: rgba(24, 144, 255, 0.1);
+}
+
+/* 文件上传提示样式 */
+.input-area .ant-typography {
+  margin: 0;
+}
+
+/* 上传文件显示区域 */
+.message-files .ant-tag {
+  margin: 2px 4px 2px 0;
+  padding: 2px 8px;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+/* 输入区域文件标签 */
+.input-area .ant-tag {
+  margin: 2px 4px 2px 0;
+  font-size: 12px;
+}
+
+/* 卡片标题样式 */
+.chat-card .ant-card-head-title {
+  padding: 12px 0;
+}
+
+/* 空状态图标样式 */
+.empty-state .anticon {
+  margin-bottom: 16px;
+}
+
+/* 文件标签样式优化 */
+.message-files .ant-tag,
+.input-area .ant-tag {
+  border-radius: 6px;
+  border: 1px solid #d9d9d9;
+  background: #f8f9fa;
+  color: #1890ff;
+  font-size: 11px;
+  padding: 2px 8px;
+  margin: 2px 4px 2px 0;
+  display: inline-flex;
+  align-items: center;
+  max-width: 200px;
+}
+
+.message-files .ant-tag:hover,
+.input-area .ant-tag:hover {
+  border-color: #1890ff;
+  background: #e6f7ff;
+}
+
+/* 文件上传按钮样式 */
+.input-area .ant-upload .ant-btn {
+  border-radius: 6px 0 0 6px;
+  border-right: none;
+}
+
+/* 发送按钮样式 */
+.input-area .ant-btn-primary {
+  border-radius: 0 6px 6px 0;
+}
+
+/* 文本域样式 */
+.input-area .ant-input {
+  border-radius: 0;
+  border-left: none;
+  border-right: none;
+}
+
+/* 文件信息显示区域 */
+.input-area .ant-row {
+  margin: 0;
+}
+
+.input-area .ant-col {
+  padding: 0;
+}
+
+/* 拖拽上传动画 */
+@keyframes uploadPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(24, 144, 255, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(24, 144, 255, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(24, 144, 255, 0);
+  }
+}
+
+.ant-upload-drag.ant-upload-drag-hover {
+  animation: uploadPulse 1.5s infinite;
+}

@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📈 缺陷趋势分析 - 居中柱状图 + 精准悬浮提示</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .title {
+            font-size: 28px;
+            font-weight: bold;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        /* 图表容器 */
+        .chart-container {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: visible;
+        }
+        
+        .time-range {
+            text-align: center;
+            margin-bottom: 16px;
+            padding: 8px 16px;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 20px;
+            color: #667eea;
+            font-weight: bold;
+            display: inline-block;
+        }
+        
+        .chart-bars {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 20px;
+            height: 280px;
+            padding: 40px 20px 50px 20px;
+            position: relative;
+        }
+        
+        .chart-bar {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            flex: 0 0 auto;
+        }
+        
+        .chart-bar:hover {
+            transform: scale(1.1) translateY(-4px);
+        }
+        
+        .bar-stack {
+            width: 32px;
+            border-radius: 6px 6px 2px 2px;
+            position: relative;
+            box-shadow: 
+                0 4px 12px rgba(0,0,0,0.15),
+                inset 0 2px 4px rgba(255,255,255,0.3);
+            animation: barGrow 0.8s ease-out both;
+        }
+        
+        .bar-label {
+            margin-top: 8px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #666;
+            transition: color 0.3s ease;
+        }
+        
+        .chart-bar:hover .bar-label {
+            color: #667eea;
+        }
+        
+        /* 悬浮提示卡片 - 相对定位 */
+        .tooltip {
+            position: absolute;
+            left: 100%;
+            top: 50%;
+            transform: translateY(-50%);
+            margin-left: 15px;
+            background: rgba(255, 255, 255, 0.98);
+            border: 1px solid #e8e8e8;
+            border-radius: 8px;
+            padding: 12px 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(10px);
+            min-width: 180px;
+            pointer-events: none;
+            opacity: 0;
+            animation: tooltipFadeIn 0.2s ease-out forwards;
+            z-index: 1000;
+            white-space: nowrap;
+        }
+        
+        /* 左侧小三角指示器 */
+        .tooltip::before {
+            content: '';
+            position: absolute;
+            left: -6px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-top: 6px solid transparent;
+            border-bottom: 6px solid transparent;
+            border-right: 6px solid rgba(255, 255, 255, 0.98);
+            filter: drop-shadow(-2px 0 4px rgba(0, 0, 0, 0.1));
+        }
+        
+        .tooltip-date {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 14px;
+        }
+        
+        .tooltip-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin: 6px 0;
+            font-size: 13px;
+        }
+        
+        .tooltip-item-left {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .tooltip-item-icon {
+            font-size: 16px;
+        }
+        
+        .tooltip-item-value {
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .tooltip-total {
+            border-top: 1px solid #e8e8e8;
+            margin-top: 8px;
+            padding-top: 8px;
+            font-weight: bold;
+            color: #667eea;
+            font-size: 14px;
+            text-align: center;
+        }
+        
+        /* 图例 */
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        
+        /* 动画 */
+        @keyframes barGrow {
+            from {
+                height: 0;
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        @keyframes tooltipFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50%) translateX(-5px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(-50%) translateX(0) scale(1);
+            }
+        }
+        
+        /* 说明区域 */
+        .info-box {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(24, 144, 255, 0.1);
+            border-radius: 12px;
+            border: 1px solid rgba(24, 144, 255, 0.2);
+        }
+        
+        .info-title {
+            color: #1890ff;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 18px;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .info-item {
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .info-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        
+        .info-item-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 4px;
+        }
+        
+        .info-item-desc {
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">📈 缺陷趋势分析</h1>
+            <p class="subtitle">✅ 完美修复：柱状图居中 + 悬浮提示精准定位</p>
+        </div>
+        
+        <div class="chart-container">
+            <div style="text-align: center;">
+                <span class="time-range">📅 09-23 至 09-30 (最近8天)</span>
+            </div>
+            
+            <div class="chart-bars" id="chartBars">
+                <!-- 柱状图将通过JavaScript生成 -->
+            </div>
+            
+            <div class="legend">
+                <div class="legend-item" style="background: rgba(255, 77, 79, 0.1); border: 1px solid rgba(255, 77, 79, 0.3); color: #ff4d4f;">
+                    <span style="font-size: 16px;">🔥</span>
+                    <span>严重</span>
+                </div>
+                <div class="legend-item" style="background: rgba(250, 173, 20, 0.1); border: 1px solid rgba(250, 173, 20, 0.3); color: #faad14;">
+                    <span style="font-size: 16px;">⚠️</span>
+                    <span>主要</span>
+                </div>
+                <div class="legend-item" style="background: rgba(24, 144, 255, 0.1); border: 1px solid rgba(24, 144, 255, 0.3); color: #1890ff;">
+                    <span style="font-size: 16px;">🔍</span>
+                    <span>次要</span>
+                </div>
+                <div class="legend-item" style="background: rgba(82, 196, 26, 0.1); border: 1px solid rgba(82, 196, 26, 0.3); color: #52c41a;">
+                    <span style="font-size: 16px;">💡</span>
+                    <span>轻微</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="info-box">
+            <div class="info-title">✅ 完美修复</div>
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-icon">🎯</div>
+                    <div class="info-item-title">柱状图居中</div>
+                    <div class="info-item-desc">使用justify-content: center + gap: 20px</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-icon">📍</div>
+                    <div class="info-item-title">相对定位</div>
+                    <div class="info-item-desc">悬浮提示在每个柱状条内部相对定位</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-icon">➡️</div>
+                    <div class="info-item-title">精准显示</div>
+                    <div class="info-item-desc">left: 100% + margin-left: 15px</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-icon">🎨</div>
+                    <div class="info-item-title">视觉优化</div>
+                    <div class="info-item-desc">overflow: visible 确保提示不被裁剪</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const data = [
+            { date: '09-23', severe: 2, major: 5, minor: 8, trivial: 3, total: 18, height: 72 },
+            { date: '09-24', severe: 1, major: 7, minor: 12, trivial: 5, total: 25, height: 100 },
+            { date: '09-25', severe: 3, major: 6, minor: 9, trivial: 4, total: 22, height: 88 },
+            { date: '09-26', severe: 2, major: 8, minor: 11, trivial: 6, total: 27, height: 108 },
+            { date: '09-27', severe: 4, major: 9, minor: 13, trivial: 7, total: 33, height: 132 },
+            { date: '09-28', severe: 1, major: 6, minor: 10, trivial: 4, total: 21, height: 84 },
+            { date: '09-29', severe: 2, major: 7, minor: 8, trivial: 5, total: 22, height: 88 },
+            { date: '09-30', severe: 3, major: 8, minor: 12, trivial: 6, total: 29, height: 116 }
+        ];
+        
+        const colors = {
+            severe: '#ff4d4f',
+            major: '#faad14',
+            minor: '#1890ff',
+            trivial: '#52c41a'
+        };
+        
+        const icons = {
+            severe: '🔥',
+            major: '⚠️',
+            minor: '🔍',
+            trivial: '💡'
+        };
+        
+        const names = {
+            severe: '严重',
+            major: '主要',
+            minor: '次要',
+            trivial: '轻微'
+        };
+        
+        const chartBars = document.getElementById('chartBars');
+        
+        // 生成柱状图
+        data.forEach((item, index) => {
+            const bar = document.createElement('div');
+            bar.className = 'chart-bar';
+            bar.style.animationDelay = `${index * 0.1}s`;
+            
+            const severePct = (item.severe / item.total) * 100;
+            const majorPct = (item.major / item.total) * 100;
+            const minorPct = (item.minor / item.total) * 100;
+            const trivialPct = (item.trivial / item.total) * 100;
+            
+            bar.innerHTML = `
+                <div class="bar-stack" style="
+                    height: ${item.height}px;
+                    background: linear-gradient(to top, 
+                        ${colors.trivial} 0%, 
+                        ${colors.trivial} ${trivialPct}%, 
+                        ${colors.minor} ${trivialPct}%, 
+                        ${colors.minor} ${trivialPct + minorPct}%, 
+                        ${colors.major} ${trivialPct + minorPct}%, 
+                        ${colors.major} ${trivialPct + minorPct + majorPct}%, 
+                        ${colors.severe} ${trivialPct + minorPct + majorPct}%, 
+                        ${colors.severe} 100%);
+                "></div>
+                <div class="bar-label">${item.date}</div>
+            `;
+            
+            // 创建悬浮提示
+            const tooltip = document.createElement('div');
+            tooltip.className = 'tooltip';
+            tooltip.innerHTML = `
+                <div class="tooltip-date">📅 ${item.date}</div>
+                ${['severe', 'major', 'minor', 'trivial'].map(key => `
+                    <div class="tooltip-item">
+                        <div class="tooltip-item-left">
+                            <span class="tooltip-item-icon">${icons[key]}</span>
+                            <span style="color: ${colors[key]}; font-weight: 500;">${names[key]}</span>
+                        </div>
+                        <span class="tooltip-item-value" style="color: ${colors[key]};">${item[key]}</span>
+                    </div>
+                `).join('')}
+                <div class="tooltip-total">📊 总计: ${item.total}</div>
+            `;
+            
+            // 鼠标悬停事件
+            bar.addEventListener('mouseenter', () => {
+                bar.appendChild(tooltip);
+            });
+            
+            bar.addEventListener('mouseleave', () => {
+                if (tooltip.parentNode === bar) {
+                    bar.removeChild(tooltip);
+                }
+            });
+            
+            chartBars.appendChild(bar);
+        });
+    </script>
+</body>
+</html>
